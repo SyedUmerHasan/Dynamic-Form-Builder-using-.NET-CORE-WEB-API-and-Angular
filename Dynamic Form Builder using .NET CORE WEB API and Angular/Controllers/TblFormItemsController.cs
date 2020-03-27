@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Models;
+using Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.ViewModel;
 
 namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Controllers
 {
@@ -77,12 +78,12 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<TblFormItem>> PostTblFormItem(TblFormItem tblFormItem)
+        public async Task<ActionResult<TblFormItem>> PostTblFormItem(FormItemWithOptions myFormItem)
         {
-            _context.TblFormItems.Add(tblFormItem);
+            _context.TblFormItems.Add(myFormItem.formItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTblFormItem", new { id = tblFormItem.ItemId }, tblFormItem);
+            return CreatedAtAction("GetTblFormItem", new { id = myFormItem.formItem.ItemId }, myFormItem.formItem);
         }
 
         // DELETE: api/TblFormItems/5

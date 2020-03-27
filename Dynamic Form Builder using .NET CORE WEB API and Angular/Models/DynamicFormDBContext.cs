@@ -16,12 +16,13 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Models
         }
 
         public virtual DbSet<TblFormItem> TblFormItems { get; set; }
+        public virtual DbSet<TblOption> TblOptions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=DefaultConnection");
+                optionsBuilder.UseSqlServer("name=DefaultConnection");
             }
         }
 
@@ -60,10 +61,7 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Models
                     .HasMaxLength(150)
                     .IsUnicode(false);
 
-                entity.Property(e => e.OptionId)
-                    .HasColumnName("option_id")
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.OptionId).HasColumnName("option_id");
 
                 entity.Property(e => e.Placeholder)
                     .HasColumnName("placeholder")
@@ -80,6 +78,27 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Models
                 entity.Property(e => e.Value)
                     .HasColumnName("value")
                     .HasMaxLength(150)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TblOption>(entity =>
+            {
+                entity.HasKey(e => e.OptionId);
+
+                entity.ToTable("tbl_options");
+
+                entity.Property(e => e.OptionId).HasColumnName("option_id");
+
+                entity.Property(e => e.ItemId).HasColumnName("item_id");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Value)
+                    .HasColumnName("value")
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 

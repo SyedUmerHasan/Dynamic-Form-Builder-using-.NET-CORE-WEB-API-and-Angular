@@ -14,7 +14,7 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Models
         public string Message { get; set; }
         public string Placeholder { get; set; }
         public string Value { get; set; }
-        public string OptionId { get; set; }
+        public long? OptionId { get; set; }
         public bool? Required { get; set; }
     }
 }

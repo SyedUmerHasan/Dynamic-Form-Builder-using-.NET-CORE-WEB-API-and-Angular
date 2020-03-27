@@ -31,7 +31,9 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins, builder => {
-                    builder.WithOrigins("http://localhost:4200");
+                    builder.WithOrigins("http://localhost:4200")
+                                            .WithMethods("POST", "GET", "PUT", "DELETE")
+                                            .WithHeaders("*");
                 });
             });
             services.AddDbContext<DynamicFormDBContext>(options =>options.UseSqlServer(
