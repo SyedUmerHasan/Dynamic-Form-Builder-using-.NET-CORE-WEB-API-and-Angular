@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.Models;
+using Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular.CloudModels;
 
 namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular
 {
@@ -22,22 +23,32 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular
             Configuration = configuration;
         }
 
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        readonly string myAllowSpecificOrigin = "_myAllowSpecificOrigin";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DynamicFormDBContext>(options => options.UseSqlServer(
+               Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<GCPDynamicFormDBContext>(options => options.UseSqlServer(
+               Configuration.GetConnectionString("GCPCloudConnection")));
+            //For Cors
+
             services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins, builder => {
-                    builder.WithOrigins("http://localhost:4200")
-                                            .WithMethods("POST", "GET", "PUT", "DELETE")
-                                            .WithHeaders("*");
+                options.AddPolicy(myAllowSpecificOrigin,
+                builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
                 });
             });
-            services.AddDbContext<DynamicFormDBContext>(options =>options.UseSqlServer(
-               Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
 
         }
@@ -49,11 +60,12 @@ namespace Dynamic_Form_Builder_using_.NET_CORE_WEB_API_and_Angular
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(myAllowSpecificOrigin);
 
             app.UseAuthorization();
 
